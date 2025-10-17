@@ -1,0 +1,268 @@
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+@prefix grddl: <http://www.w3.org/2003/g/data-view#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+@prefix ssn:  <http://www.w3.org/ns/ssn/> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix qudt: <http://qudt.org/schema/qudt/> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix quantity: <http://qudt.org/vocab/quantitykind/> .
+@base <http://example.org/zephir300/> .
+
+<http://example.org/zephir300/> a rdfs:Resource ;
+    dc:title "ZephIR 300 Wind Lidar Ontology (QUDT-aligned)" ;
+    rdfs:comment """
+    QUDT-aligned RDFS ontology for ZephIR 300 wind lidar measurements.
+    Focused on core atmospheric parameters with standard QUDT units.
+    Note: height_0 (ground level) has no vertical wind speed measurements.
+    """ ;
+    rdfs:seeAlso <https://www.w3.org/TR/vocab-ssn/>, <http://qudt.org/> .
+
+#################################################################
+# CLASSES
+#################################################################
+
+:ZephIR300Sensor a rdfs:Class ;
+    rdfs:label "ZephIR 300 Sensor" ;
+    rdfs:subClassOf sosa:Sensor .
+
+:WindObservation a rdfs:Class ;
+    rdfs:label "Wind Observation" ;
+    rdfs:subClassOf sosa:Observation .
+
+:AtmosphericProperty a rdfs:Class ;
+    rdfs:label "Atmospheric Property" ;
+    rdfs:subClassOf sosa:ObservableProperty .
+
+:HeightLevel a rdfs:Class ;
+    rdfs:label "Height Level" ;
+    rdfs:subClassOf sosa:Sample .
+
+#################################################################
+# PROPERTIES
+#################################################################
+
+:madeAtHeight a rdf:Property ;
+    rdfs:label "made at height" ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range :HeightLevel .
+
+:hasQuantityValue a rdf:Property ;
+    rdfs:label "has quantity value" ;
+    rdfs:comment "Links an observation to a QUDT quantity value with numeric value and unit." ;
+    rdfs:domain sosa:Observation ;
+    rdfs:range qudt:QuantityValue .
+
+:hasQuantityKind a rdf:Property ;
+    rdfs:label "has quantity kind" ;
+    rdfs:comment "Links an atmospheric property to its QUDT quantity kind." ;
+    rdfs:domain :AtmosphericProperty ;
+    rdfs:range qudt:QuantityKind .
+
+:hasPreferredUnit a rdf:Property ;
+    rdfs:label "has preferred unit" ;
+    rdfs:comment "Specifies the preferred QUDT unit for this atmospheric property." ;
+    rdfs:domain :AtmosphericProperty ;
+    rdfs:range qudt:Unit .
+
+#################################################################
+# SENSOR INDIVIDUAL
+#################################################################
+
+:sensor_zephir300 a :ZephIR300Sensor ;
+    rdfs:label "ZephIR 300 Lidar #1" ;
+    sosa:observes :windSpeed , :windDirection , :verticalSpeed ,
+                   :airTemperature , :airPressure , :humidity , :precipitation .
+
+#################################################################
+# ATMOSPHERIC PROPERTIES THESAURUS with QUDT Alignment
+#################################################################
+
+:windSpeed a :AtmosphericProperty ;
+    rdfs:label "Wind Speed" ;
+    rdfs:comment "Horizontal wind speed measured by ZephIR 300." ;
+    :hasQuantityKind quantity:WindSpeed ;
+    :hasPreferredUnit unit:M-PER-S ;
+    rdfs:seeAlso quantity:WindSpeed, unit:M-PER-S .
+
+:windDirection a :AtmosphericProperty ;
+    rdfs:label "Wind Direction" ;
+    rdfs:comment "Wind direction in degrees from north." ;
+    :hasQuantityKind quantity:PlanarAngle ;
+    :hasPreferredUnit unit:DEG ;
+    rdfs:seeAlso quantity:PlanarAngle, unit:DEG .
+
+:verticalSpeed a :AtmosphericProperty ;
+    rdfs:label "Vertical Wind Speed" ;
+    rdfs:comment "Vertical component of wind velocity." ;
+    :hasQuantityKind quantity:Velocity ;
+    :hasPreferredUnit unit:M-PER-S ;
+    rdfs:seeAlso quantity:Velocity, unit:M-PER-S .
+
+:airTemperature a :AtmosphericProperty ;
+    rdfs:label "Air Temperature" ;
+    rdfs:comment "Ambient air temperature." ;
+    :hasQuantityKind quantity:Temperature ;
+    :hasPreferredUnit unit:DEG_C ;
+    rdfs:seeAlso quantity:Temperature, unit:DEG_C .
+
+:airPressure a :AtmosphericProperty ;
+    rdfs:label "Air Pressure" ;
+    rdfs:comment "Atmospheric pressure." ;
+    :hasQuantityKind quantity:Pressure ;
+    :hasPreferredUnit unit:HPA ;
+    rdfs:seeAlso quantity:Pressure, unit:HPA .
+
+:humidity a :AtmosphericProperty ;
+    rdfs:label "Relative Humidity" ;
+    rdfs:comment "Relative humidity." ;
+    :hasQuantityKind quantity:RelativeHumidity ;
+    :hasPreferredUnit unit:PERCENT ;
+    rdfs:seeAlso quantity:RelativeHumidity, unit:PERCENT .
+
+:precipitation a :AtmosphericProperty ;
+    rdfs:label "Precipitation" ;
+    rdfs:comment "Rainfall or liquid precipitation." ;
+    :hasQuantityKind quantity:Precipitation ;
+    :hasPreferredUnit unit:MilliM ;
+    rdfs:seeAlso quantity:Precipitation, unit:MilliM .
+
+#################################################################
+# HEIGHT LEVELS (1-13) - All defined but only height_0 used in samples
+#################################################################
+
+:height_1 a :HeightLevel ; 
+    rdfs:label "Height Level 1" ; 
+    rdfs:comment "First measurement height (300m)." .
+
+:height_2 a :HeightLevel ; 
+    rdfs:label "Height Level 2" ; 
+    rdfs:comment "Second measurement height (250m)." .
+
+:height_3 a :HeightLevel ; 
+    rdfs:label "Height Level 3" ; 
+    rdfs:comment "Third measurement height (200m)." .
+
+:height_4 a :HeightLevel ; 
+    rdfs:label "Height Level 4" ; 
+    rdfs:comment "Fourth measurement height (150m)." .
+
+:height_5 a :HeightLevel ; 
+    rdfs:label "Height Level 5" ; 
+    rdfs:comment "Fifth measurement height (120m)." .
+
+:height_6 a :HeightLevel ; 
+    rdfs:label "Height Level 6" ; 
+    rdfs:comment "Sixth measurement height (100m)." .
+
+:height_7 a :HeightLevel ; 
+    rdfs:label "Height Level 7" ; 
+    rdfs:comment "Seventh measurement height (80m)." .
+
+:height_8 a :HeightLevel ; 
+    rdfs:label "Height Level 8" ; 
+    rdfs:comment "Eighth measurement height (60m)." .
+
+:height_9 a :HeightLevel ; 
+    rdfs:label "Height Level 9" ; 
+    rdfs:comment "Tenth measurement height (20m)." .
+
+:height_10 a :HeightLevel ; 
+    rdfs:label "Height Level 10" ; 
+    rdfs:comment "Eleventh measurement height (10m)." .
+
+:height_11 a :HeightLevel ; 
+    rdfs:label "Height Level 11" ; 
+    rdfs:comment "Twelfth measurement height (38m)." .
+
+:height_12 a :HeightLevel ; 
+    rdfs:label "Height Level 12" ; 
+    rdfs:comment "Ground/reference level (0m) - no vertical wind measurements." .
+
+#################################################################
+# QUDT QUANTITY VALUES with specified units only
+#################################################################
+
+# Wind Speed - unit:M-PER-S
+:qty_windSpeed_1 a qudt:QuantityValue ;
+    qudt:numericValue 6.9 ;
+    qudt:unit unit:M-PER-S .
+
+# Wind Direction - unit:DEG  
+:qty_windDirection_1 a qudt:QuantityValue ;
+    qudt:numericValue 185.0 ;
+    qudt:unit unit:DEG .
+
+# Vertical Speed - unit:M-PER-S (NOT for height_0)
+:qty_verticalSpeed_1 a qudt:QuantityValue ;
+    qudt:numericValue 0.1 ;
+    qudt:unit unit:M-PER-S .
+
+# Air Temperature - unit:DEG_C
+:qty_temperature_1 a qudt:QuantityValue ;
+    qudt:numericValue 15.5 ;
+    qudt:unit unit:DEG_C .
+
+# Air Pressure - unit:HPA
+:qty_pressure_1 a qudt:QuantityValue ;
+    qudt:numericValue 1013.25 ;
+    qudt:unit unit:HPA .
+
+# Humidity - unit:PERCENT
+:qty_humidity_1 a qudt:QuantityValue ;
+    qudt:numericValue 65.0 ;
+    qudt:unit unit:PERCENT .
+
+# Precipitation - unit:MilliM
+:qty_precipitation_1 a qudt:QuantityValue ;
+    qudt:numericValue 0.0 ;
+    qudt:unit unit:MilliM .
+
+#################################################################
+# SAMPLE OBSERVATIONS - Only one height (height_0) - NO VERTICAL SPEED
+#################################################################
+
+:observation_20251008_h0_windSpeed a :WindObservation ;
+    sosa:madeBySensor :sensor_zephir300 ;
+    :madeAtHeight :height_0 ;
+    sosa:observedProperty :windSpeed ;
+    sosa:resultTime "2025-10-08T09:00:00Z"^^xsd:dateTime ;
+    :hasQuantityValue :qty_windSpeed_1 .
+
+:observation_20251008_h0_windDirection a :WindObservation ;
+    sosa:madeBySensor :sensor_zephir300 ;
+    :madeAtHeight :height_0 ;
+    sosa:observedProperty :windDirection ;
+    sosa:resultTime "2025-10-08T09:00:00Z"^^xsd:dateTime ;
+    :hasQuantityValue :qty_windDirection_1 .
+
+# NOTE: NO VERTICAL SPEED OBSERVATION FOR height_0
+
+:observation_20251008_h0_temperature a :WindObservation ;
+    sosa:madeBySensor :sensor_zephir300 ;
+    :madeAtHeight :height_0 ;
+    sosa:observedProperty :airTemperature ;
+    sosa:resultTime "2025-10-08T09:00:00Z"^^xsd:dateTime ;
+    :hasQuantityValue :qty_temperature_1 .
+
+:observation_20251008_h0_pressure a :WindObservation ;
+    sosa:madeBySensor :sensor_zephir300 ;
+    :madeAtHeight :height_0 ;
+    sosa:observedProperty :airPressure ;
+    sosa:resultTime "2025-10-08T09:00:00Z"^^xsd:dateTime ;
+    :hasQuantityValue :qty_pressure_1 .
+
+:observation_20251008_h0_humidity a :WindObservation ;
+    sosa:madeBySensor :sensor_zephir300 ;
+    :madeAtHeight :height_0 ;
+    sosa:observedProperty :humidity ;
+    sosa:resultTime "2025-10-08T09:00:00Z"^^xsd:dateTime ;
+    :hasQuantityValue :qty_humidity_1 .
+
+:observation_20251008_h0_precipitation a :WindObservation ;
+    sosa:madeBySensor :sensor_zephir300 ;
+    :madeAtHeight :height_0 ;
+    sosa:observedProperty :precipitation ;
+    sosa:resultTime "2025-10-08T09:00:00Z"^^xsd:dateTime ;
+    :hasQuantityValue :qty_precipitation_1 .
